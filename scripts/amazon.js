@@ -94,7 +94,7 @@ function addToCart(productId){
     cart.push({
       id:productId,
       quantity:productQuantitySelcte(productId)||1,
-      shippingPrice:499,
+      shippingPrice:0,
     });
     saveToStorage()
   }
