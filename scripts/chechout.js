@@ -1,6 +1,8 @@
 import {products} from '../data/products.js'
 import {cart,removeFromCart} from './cart.js'
 
+
+if(cart){
 cart.forEach((cartItem)=>{
     products.forEach((product)=>{
         if(product.id === cartItem.id){
@@ -93,20 +95,22 @@ cart.forEach((cartItem)=>{
               .innerHTML += cartHTML;
         }      
     });
-    document.querySelectorAll('.js-delete-link')
-        .forEach((link)=>{
-            link.addEventListener('click',()=>{
-                const productId = link.dataset.productId
-                removeFromCart(productId);
-                document.querySelector(`.js-cart-item-container-${productId}`).remove()
-                updateCheckoutNumber()
-            })
-        }) 
+  document.querySelectorAll('.js-delete-link')
+    .forEach((link)=>{
+        link.addEventListener('click',()=>{
+            const productId = link.dataset.productId
+            removeFromCart(productId);
+            document.querySelector(`.js-cart-item-container-${productId}`).remove()
+            updateCheckoutNumber()
+            OrderSummaryPrices()
+        })
+    }) 
     
-  })  
+})  
 function updateCheckoutNumber(){
-document.querySelectorAll('.js-return-to-home-link-number').forEach((link)=>{
-  link.innerHTML = cart.length;
+  OrderSummaryPrices()
+  document.querySelectorAll('.js-return-to-home-link-number').forEach((link)=>{
+    link.innerHTML = cart.length;
 });
 }
 updateCheckoutNumber() 
@@ -136,6 +140,7 @@ document.querySelectorAll('.save-quantity-link').forEach((save)=>{
     const value = document.querySelector(`.js-update-quantity-input-${save.dataset.productId}`).value;
     document.querySelector(`.js-quantity-label-${save.dataset.productId}`).innerHTML = value
     updateCartQuntity(save.dataset.productId , value)
+    OrderSummaryPrices()
   });
 });
 
@@ -145,7 +150,7 @@ function updateCartQuntity(id , value){
       cartItem.quantity = JSON.parse(value);
     }
   });
-  localStorage.setItem('updatedCart' ,JSON.stringify(cart))
+  localStorage.setItem('cart' ,JSON.stringify(cart))
 }
 function deliveryDayts(upDays) {
   const today = new Date();
@@ -189,5 +194,53 @@ selectedDeliveryDate('1' , 11)
 selectedDeliveryDate('2' , 5)
 selectedDeliveryDate('3' , 3)
 
+function ShippingPriceChange(number ,ShippingPrice){
+  document.querySelectorAll(`.delivery-option-input-${number}`).forEach(option=>{
+    option.addEventListener('click',()=>{
+      cart.forEach(cartItem=>{
+        if(cartItem.id === option.dataset.dateId){
+          cartItem.shippingPrice = ShippingPrice
+          console.log(cartItem.shippingPrice)
+          OrderSummaryPrices()
+        }
+      })
+    })
+  })
+}
+ShippingPriceChange(1 ,0)
+ShippingPriceChange(2 ,499)
+ShippingPriceChange(3 ,999)
+
+
+
+function OrderSummaryPrices(){
+
+  let itemsPrice = 0;
+  cart.forEach(cartItem=>{
+    products.forEach(product=>{
+      if(cartItem.id === product.id){
+        itemsPrice += product.priceCents * cartItem.quantity
+      }
+    })
+  })
+  document.querySelector('.js-itemsPrice').innerHTML =`$${itemsPrice/100}`
+  
+  let shippingPrices =0; 
+  cart.forEach(cartItem=>{
+    shippingPrices += cartItem.shippingPrice
+  })
+  document.querySelector('.js-shippingPrices').innerHTML =`$${shippingPrices/100}`
+  
+  let subTotal= shippingPrices + itemsPrice
+  document.querySelector('.js-subTotal').innerHTML =`$${subTotal/100}`
+  
+  let taxes= subTotal/10
+  document.querySelector('.js-taxes').innerHTML =`$${(taxes/100).toFixed(2)}`
+  
+  
+  document.querySelector('.js-total').innerHTML =`$${((subTotal+taxes)/100).toFixed(2)}`
+}
+OrderSummaryPrices()
+}
 
 
