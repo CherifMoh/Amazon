@@ -2,9 +2,15 @@ import {products} from '../data/products.js'
 import {cart,removeFromCart} from './cart.js'
 
 
-if(cart){
+
+if(cart.length === 0){
+  console.log('empty')
+  document.querySelector('.js-order-summary')
+  .innerHTML = `<div class="empty-cart">Your Cart is Empty</div>`;
+}
+
 cart.forEach((cartItem)=>{
-    products.forEach((product)=>{
+          products.forEach((product)=>{
         if(product.id === cartItem.id){
           const cartHTML = `
             <div class="cart-item-container js-cart-item-container-${product.id}" data-product-id ="${product.id}">
@@ -91,8 +97,10 @@ cart.forEach((cartItem)=>{
               </div>
             </div>
           </div>`
-            document.querySelector('.js-order-summary')
-              .innerHTML += cartHTML;
+          
+          document.querySelector('.js-order-summary')
+            .innerHTML += cartHTML;
+          
         }      
     });
   document.querySelectorAll('.js-delete-link')
@@ -103,6 +111,11 @@ cart.forEach((cartItem)=>{
             document.querySelector(`.js-cart-item-container-${productId}`).remove()
             updateCheckoutNumber()
             OrderSummaryPrices()
+            if(cart.length === 0){
+              console.log('empty')
+              document.querySelector('.js-order-summary')
+              .innerHTML = `<div class="empty-cart">Your Cart is Empty</div>`;
+            }
         })
     }) 
     
@@ -241,6 +254,6 @@ function OrderSummaryPrices(){
   document.querySelector('.js-total').innerHTML =`$${((subTotal+taxes)/100).toFixed(2)}`
 }
 OrderSummaryPrices()
-}
+
 
 

@@ -1,5 +1,5 @@
 import {products} from '../data/products.js'
-import {cart,addToCart} from './cart.js'
+import {cart,saveToStorage} from './cart.js'
 
 let productsHTML = '';
 
@@ -28,7 +28,7 @@ products.forEach(product => {
       </div>
 
       <div class="product-quantity-container">
-        <select>
+        <select class="product-quantity-select-${product.id}">
           <option selected value="1">1</option>
           <option value="2">2</option>
           <option value="3">3</option>
@@ -57,14 +57,54 @@ products.forEach(product => {
   `
     
 });
+if(document.querySelector('.js-product-grid')){
+  document.querySelector('.js-product-grid').innerHTML = productsHTML;
+}
 
-document.querySelector('.js-product-grid')
-  .innerHTML = productsHTML;
+
+export function productQuantitySelcte(id){
+  
+  const slector = document.querySelector(`.product-quantity-select-${id}`)
+ 
+  let options = slector.options;
+  let selectedOptionValues = [];
+  for (let i = 0; i < options.length; i++) {
+    let option = options[i];
+    if (option.selected) {
+      selectedOptionValues.push(option.value);
+    }
+  }
+  const selectedOPtion = selectedOptionValues.join()
+  return selectedOPtion
+}
+
+function addToCart(productId){
+  let matchingItem = 0;
+  if(cart){
+    cart.forEach((cartItem)=>{
+      if(cartItem.id === productId){
+        matchingItem = cartItem;
+      }        
+    });
+  }
+  if(matchingItem){
+    matchingItem.quantity +=1
+    saveToStorage()
+  }else if(cart){
+    cart.push({
+      id:productId,
+      quantity:productQuantitySelcte(productId)||1,
+      shippingPrice:499,
+    });
+    saveToStorage()
+  }
+}
+
 
 function updateCartQuntity(){
   
   document.querySelector('.js-cart-quantity')
-    .innerHTML = cart ?cart.length:0 ;
+  .innerHTML = cart ?cart.length:0 ;
 }
 
 updateCartQuntity()
@@ -76,7 +116,6 @@ document.querySelectorAll('.js-add-to-cart').forEach((button)=>{
     addedToCart(button.dataset.productName)
     updateCartQuntity()
     localStorage.setItem('cart', JSON.stringify(cart)) 
-    console.log(JSON.parse(localStorage.getItem('cart')))
     })
 })
 

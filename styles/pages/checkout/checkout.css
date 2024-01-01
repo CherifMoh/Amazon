@@ -191,3 +191,11 @@
   width: 50px;
   font-size: 16px;
 }
+
+.empty-cart{
+  text-align: center;
+  margin-top: 40px;
+  font-weight: 600;
+  font-size: 36px;
+  color: #B12704;
+}
