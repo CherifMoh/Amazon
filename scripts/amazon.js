@@ -79,6 +79,10 @@ export function productQuantitySelcte(id){
   return selectedOPtion
 }
 
+document.querySelector('.scrool-up-footer').addEventListener('click',()=>{
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+})
+
 function addToCart(productId){
   let matchingItem = 0;
   if(cart){

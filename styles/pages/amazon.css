@@ -1,45 +1,50 @@
 .main {
   margin-top: 60px;
+  padding:15px 0;
+  background: #E3E6E6;
 }
 
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(8, 1fr);
+  grid-template-columns: repeat(5, 1fr) ;
+  justify-content: center;
+  max-width: calc(220px*5);
+  margin: auto;
+  column-gap: 10px;
+  row-gap: 10px;
 }
 
 @media (max-width: 2000px) {
-  .products-grid {
-    grid-template-columns: repeat(7, 1fr);
-  }
-}
-
-@media (max-width: 1600px) {
-  .products-grid {
-    grid-template-columns: repeat(6, 1fr);
-  }
-}
-
-@media (max-width: 1300px) {
   .products-grid {
     grid-template-columns: repeat(5, 1fr);
   }
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1600px) {
   .products-grid {
     grid-template-columns: repeat(4, 1fr);
+    max-width: calc(220px*4);
   }
 }
 
-@media (max-width: 800px) {
+@media (max-width: 1150px) {
   .products-grid {
     grid-template-columns: repeat(3, 1fr);
+    max-width: calc(220px*3);
+  }
+}
+
+@media (max-width: 850px) {
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: calc(220px*2);
   }
 }
 
 @media (max-width: 575px) {
   .products-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(1, 1fr);
+    max-width: 220px;
   }
 }
 
@@ -50,10 +55,12 @@
 }
 
 .product-container {
+  background-color: white;
+  border-radius: 5px;
+  width: 220px;
   padding: 25px;
   padding-top: 40px;
-  border-right: 1px solid rgb(231, 231, 231);
-  border-bottom: 1px solid rgb(231, 231, 231);
+  border: 1px solid rgb(231, 231, 231);
   display: flex;
   flex-direction: column;
 }
@@ -137,6 +144,51 @@
 .display-none{
   display: none!important;
 }
+
 .display-flex{
   display: flex!important;
+}
+
+footer{
+  width: 100%;
+  background-color: rgb(19, 25, 33);
+  height: 150px;
+}
+
+.scrool-up-footer{
+  border: none;
+  text-align: center;
+  color: #111;
+  padding: 15px 0;
+  line-height: 19px;
+  width: 100%;
+  background-color: #232F3E;
+}
+
+.scrool-up-footer:active{
+  box-shadow: inset 5px 5px 10px -3px rgba(0, 0, 0, 0.7);
+}
+
+.scrool-up-footer span{
+  color: #ffffff;
+  font-size: 13px;
+  
+}
+
+.scrool-up-footer:hover{
+  background-color: #2a3543;
+}
+
+.footer-container{
+  max-width: 500px;
+  padding-top: 25px;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-logo{
+  width: 100px;
+  height: 30.9px;
 }
