@@ -1,10 +1,12 @@
 import {products} from '../data/products.js'
+import {orders} from './orders.js'
 import {cart,removeFromCart} from './cart.js'
+import { v4 as uuidv4 } from 'https://jspm.dev/uuid';
 
 
+if(document.querySelector('.js-order-summary')){
 
 if(cart.length === 0){
-  console.log('empty')
   document.querySelector('.js-order-summary')
   .innerHTML = `<div class="empty-cart">Your Cart is Empty</div>`;
 }
@@ -112,7 +114,6 @@ cart.forEach((cartItem)=>{
             updateCheckoutNumber()
             OrderSummaryPrices()
             if(cart.length === 0){
-              console.log('empty')
               document.querySelector('.js-order-summary')
               .innerHTML = `<div class="empty-cart">Your Cart is Empty</div>`;
             }
@@ -165,26 +166,7 @@ function updateCartQuntity(id , value){
   });
   localStorage.setItem('cart' ,JSON.stringify(cart))
 }
-function deliveryDayts(upDays) {
-  const today = new Date();
-  const futureDate = new Date(today);
-  futureDate.setDate(today.getDate() + upDays);
-  const monthNames = [
-    "January", "February", "March", "April",
-    "May", "June", "July", "August",
-    "September", "October", "November", "December"
-  ];
-  const dayNames = [
-    "Sunday", "Monday", "Tuesday", "Wednesday",
-    "Thursday", "Friday", "Saturday"
-  ];
-  const day = dayNames[futureDate.getDay()];
-  const month = monthNames[futureDate.getMonth()];
-  const date = futureDate.getDate();
-  const formattedDate = `${day}, ${month} ${date}`;
 
-  return formattedDate;
-}
 document.querySelectorAll('.js-delivery-option-date-1').forEach((date)=>{
   date.innerHTML = deliveryDayts(11)
 })
@@ -213,7 +195,8 @@ function ShippingPriceChange(number ,ShippingPrice){
       cart.forEach(cartItem=>{
         if(cartItem.id === option.dataset.dateId){
           cartItem.shippingPrice = ShippingPrice
-          console.log(cartItem.shippingPrice)
+          cartItem.shippingDate = document.querySelector(`.js-delivery-date-${cartItem.id}`).innerHTML
+          console.log(cartItem.shippingDate)
           OrderSummaryPrices()
         }
       })
@@ -250,10 +233,42 @@ function OrderSummaryPrices(){
   let taxes= subTotal/10
   document.querySelector('.js-taxes').innerHTML =`$${(taxes/100).toFixed(2)}`
   
-  
   document.querySelector('.js-total').innerHTML =`$${((subTotal+taxes)/100).toFixed(2)}`
+  return (subTotal+taxes)
 }
 OrderSummaryPrices()
 
+document.querySelector('.place-order-button').addEventListener('click',()=>{
+  orders.push({
+    cart :cart,
+    orderTime:deliveryDayts(0),
+    total:(OrderSummaryPrices()/100).toFixed(2),
+    id:uuidv4(),
+    cartId:cart[0].id
+  })
+  localStorage.setItem('orders',JSON.stringify(orders))
+  localStorage.removeItem('cart')
+  location.href = "../orders.html";
+})
 
+}
+export function deliveryDayts(upDays) {
+  const today = new Date();
+  const futureDate = new Date(today);
+  futureDate.setDate(today.getDate() + upDays);
+  const monthNames = [
+    "January", "February", "March", "April",
+    "May", "June", "July", "August",
+    "September", "October", "November", "December"
+  ];
+  const dayNames = [
+    "Sunday", "Monday", "Tuesday", "Wednesday",
+    "Thursday", "Friday", "Saturday"
+  ];
+  const day = dayNames[futureDate.getDay()];
+  const month = monthNames[futureDate.getMonth()];
+  const date = futureDate.getDate();
+  const formattedDate = `${day}, ${month} ${date}`;
 
+  return formattedDate;
+}

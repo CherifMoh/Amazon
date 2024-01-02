@@ -1,5 +1,6 @@
 import {products} from '../data/products.js'
 import {cart,saveToStorage} from './cart.js'
+import {deliveryDayts} from './chechout.js'
 
 let productsHTML = '';
 
@@ -95,6 +96,7 @@ function addToCart(productId){
       id:productId,
       quantity:productQuantitySelcte(productId)||1,
       shippingPrice:0,
+      shippingDate:deliveryDayts(11),
     });
     saveToStorage()
   }
